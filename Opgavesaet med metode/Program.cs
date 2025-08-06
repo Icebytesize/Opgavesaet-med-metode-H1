@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,10 @@ namespace Opgavesaet_med_metode
             MainMenu();
         }
 
+
+        /// <summary>
+        /// Denne metode laver en menu, denne menu kan man vælge nogle valgmuligheder og køre.
+        /// </summary>
         static void MainMenu()
         {
             bool programkøre = true;
@@ -28,6 +33,8 @@ namespace Opgavesaet_med_metode
                 Console.WriteLine("4: Navn og alder med gruppeinddeling");
                 Console.WriteLine("5: Opdeling af komma-separeret streng");
                 Console.WriteLine("6: Gæt et tal-spil");
+                Console.WriteLine("7: Temperatur omregner (Opgave 7a og 7c)");
+                Console.WriteLine("8: Tal til dec, bi og hex (Opgave 7b)");
                 Console.WriteLine("99: Afslut program");
                 Console.Write("\n> ");
                 int.TryParse(Console.ReadLine(), out input);
@@ -46,6 +53,7 @@ namespace Opgavesaet_med_metode
                     UdskrivningAfBrugerInput(tekst);
                     Console.ReadKey();
                 }
+
                 else if (input == 3) //Valgmulighed 3 bliver brugeren bedt om at indtaste 3 tal, de tal bliver så sendt til 4 forskellig metoder, der returnere helholdsvis Summen, Subtraktionen, multiplaktionen og summen af de 2 første tal divideret med det 3 tal.
                 {
                     double tal1, tal2, tal3;
@@ -62,6 +70,7 @@ namespace Opgavesaet_med_metode
                     Sum2Div1(tal1, tal2, tal3);
                     Console.ReadKey();
                 }
+
                 else if (input == 4) //Brugeren indtaster en string Navn og en Int alder, Sender det til en metoder der modtager det og retunere en besked på baggrund af disse input
                 {
                     string navn;
@@ -74,6 +83,7 @@ namespace Opgavesaet_med_metode
                     Console.Write(NavnAlderGruppe(navn, alder));
                     Console.ReadKey();
                 }
+
                 else if (input == 5) //Her bliver brugeren bedt om at indtastet en string med tal brudt op af kommaer, den string bliver sendt til en metode der splitter den og indføre den i et array, hvorefter der bruges en for-løøke til at udskrive alle tallene i arrayet
                 {
                     // Her bliver brugeren bedt om at indtaste en streng med tal adskilt af kommaer:
@@ -92,7 +102,112 @@ namespace Opgavesaet_med_metode
 
                 }
 
-                else { Console.WriteLine("Input ikke forstået, prøv igen"); Console.ReadKey(); }
+                else if (input == 6) //Gæt et tal spil, starter med at generere et tilfældigt tal mellem, brugeren har derefter 5 chancer for at gætte tallet, efter hvert gæt fortæller programmet om det tal brugeren har gættet er støøre eller mindre end det tilfældige tal
+                {
+                    bool spilKøre = true;
+                    int tilfældigtTal, gættetTal, antalForsøg = 5;
+                    tilfældigtTal = TilfældigtTal();
+
+                    Console.Write("Velkommen til gæt et tal spil, spillet starter når du trykker på en tast");
+                    Console.ReadKey();
+                    while (spilKøre)
+                    {
+                        Console.Clear();
+
+
+                        Console.Write($"Antal gæt tilbage: {antalForsøg}");
+
+                        Console.Write("\n\nIndtast et tal mellem 1 og 25\n\n> ");
+                        int.TryParse(Console.ReadLine(), out gættetTal);
+                        if (gættetTal < 1 || gættetTal > 25) //Hvis gættet tal er udenfor parameter
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Input ikke forstået, prøv igen");
+                            Console.ReadKey();
+                        }
+                        else if (antalForsøg > 0)
+                        {
+                            antalForsøg--;
+                            if (antalForsøg > 0)
+                            {
+                                ForHøjtEllerLavt(tilfældigtTal, gættetTal);
+                            }
+                            spilKøre = ErGætRigtigt(tilfældigtTal, gættetTal, antalForsøg);
+
+                        }
+                        if (antalForsøg <= 0)
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Du har desværre ikke flere gæt, spillet er slut. DU HAR TABT");
+                            Console.ReadKey();
+                            spilKøre = false;
+                        }
+
+                    }
+
+
+                }
+
+                else if (input == 7) //Omregn temperatur, her skal brugeren vælge hvilken enhedstype de vil regne fra og indtaste temperaturen, så bliver de 2 valg sendt til en metode der sender den omregnede temperatur tilbage
+                {
+                    bool vælgTempUnit = true;
+                    int tempUnit = 0;
+                    double temp;
+                    while (vælgTempUnit)
+                    {
+                        Console.Clear();
+                        Console.Write("Ønsker du at regne fra\n1: Celsius\neller\n2: Fahrenheit\n\n> ");
+                        int.TryParse(Console.ReadLine(), out tempUnit);
+                        if (tempUnit == 1 || tempUnit == 2)
+                        {
+                            vælgTempUnit = false;
+                        }
+                        else
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Input ikke forstået, prøv igen.");
+                        }
+                    }
+                    Console.Write("Indtast den temperatur du gerne vil omregne\n\n>  ");
+                    double.TryParse(Console.ReadLine(), out temp);
+                    Console.Clear();
+
+                    TempOmregner(tempUnit, temp);
+                }
+
+                else if (input == 8) //Brugeren indtaster et heltal, der bliver sendt til 3 forskellig metoder der henholdsvis retunere et dec, hex og bi tal 
+                {
+                    bool indtastHelTal = true;
+                    int helTal = -1;
+                    while (indtastHelTal)
+                    {
+                        Console.Clear();
+                        Console.Write("Indtast det posetive heltal du vil omregne til decimal, hex og binær\n\n>  ");
+                        int.TryParse(Console.ReadLine(), out helTal);
+                        if (helTal >= 0)
+                        {
+                            Console.WriteLine($"Decimal: {DecConverter(helTal)}");
+                            Console.WriteLine($"Hex: {HexConverter(helTal)}");
+                            Console.WriteLine($"Binær: {BiConverter(helTal)}");
+                            Console.ReadKey();
+                            indtastHelTal = false;
+                        }
+
+                        else
+                        {
+                            Console.Write("Input ikke forstået, prøv igen");
+                            Console.ReadKey();
+                        }
+                    }
+                }
+
+                else if (input == 99) // til afslutning af programmet
+                {
+                    Console.WriteLine("Programmet afsluttes, hav en god dag");
+                    programkøre = false;
+                }
+
+                else { Console.Write("Input ikke forstået, prøv igen"); Console.ReadKey(); }
             }
         }
 
@@ -192,6 +307,107 @@ namespace Opgavesaet_med_metode
                 int.TryParse(dele[i], out række[i]);
             }
             return række;
+        }
+
+        /// <summary>
+        /// Denne metode generere et tilfædligt tal mellem 1 og 25
+        /// </summary>
+        /// <returns></returns>
+        static int TilfældigtTal()
+        {
+            Random tal = new Random();
+            int tilfældigtTal = tal.Next(1, 26); //1 er minimum, 26 er ekskluderet derfor mellem 1 og 25
+            return tilfældigtTal;
+        }
+
+        /// <summary>
+        /// Denne metode tjekker om det tal brugeren har gættet på, er det rigtige tal. Hvis det er, giver spillet brugeren en sejrsbesked og afslutter spillet. Ellers retunere den bare uden at gøre noget
+        /// </summary>
+        /// <param name="tilfældigtTal"></param>
+        /// <param name="gættetTal"></param>
+        /// <param name="antalForsøg"></param>
+        /// <returns></returns>
+        static bool ErGætRigtigt(int tilfældigtTal, int gættetTal, int antalForsøg)
+        {
+            if (tilfældigtTal == gættetTal)
+            {
+                Console.Clear();
+                Console.Write($"Tilykke, du har vundet spillet med {antalForsøg} gæt tilbage");
+                Console.ReadKey();
+                return false;
+            }
+            else return true;
+        }
+
+        /// <summary>
+        /// Denne metode tjekker om tallet er større eller mindre end det tilfældige tal, og giver besked tilbage om det
+        /// </summary>
+        /// <param name="tilfældigtTal"></param>
+        /// <param name="gættetTal"></param>
+        static void ForHøjtEllerLavt(int tilfældigtTal, int gættetTal)
+        {
+            Console.Clear();
+            if (gættetTal < tilfældigtTal)
+            {
+                Console.Write($"Dit tal {gættetTal}, er mindre end det genererede tal");
+            }
+            else if (gættetTal > tilfældigtTal)
+            {
+                Console.Write($"Dit tal {gættetTal}, er større end det genererede tal");
+            }
+            Console.ReadKey();
+        }
+
+        /// <summary>
+        /// Denne metode omregner temperatur fra Celsius eller Fahrenheit på baggrund af bruger input og omregner det til andre
+        /// </summary>
+        /// <param name="tempUnit"></param>
+        /// <param name="temp"></param>
+        static void TempOmregner(int tempUnit, double temp)
+        {
+            Console.Clear();
+            if (tempUnit == 1)
+            {
+                Console.Write($"Du har indtastet {temp}° Celsius\n\nDet giver\nFahrenheit: {(temp*(9.0/5.0)+32.0)}°\nKelvin: {temp+273.15}°\nRéaumur: {temp*(4.0/5.0)}°");
+                Console.ReadKey();
+            }
+            else if (tempUnit == 2)
+            {
+                Console.Write($"Du har indtastet {temp}° Fahrenheit\nDet giver\nCelsius: {(temp - 32.0) * (5.0 / 9.0)}°\nKelvin: {((temp-32.0)*(5.0/9.0))+273.15}\nRéaumur: {(temp - 32.0) * (4.0*9.0)}");
+                Console.ReadKey();
+            }
+        }
+
+        /// <summary>
+        /// Denne metode konvertere et heltal til et decimaltal
+        /// </summary>
+        /// <param name="helTal"></param>
+        /// <returns></returns>
+        static double DecConverter(int helTal)
+        {
+            return ((double)helTal+0.00);
+        }
+
+        /// <summary>
+        /// Denne metode konvertere et heltal til et hextal via brugeres indtastet heltal og hvilken int base den skal konverteres udfra
+        /// </summary>
+        /// <param name="helTal"></param>
+        /// <returns></returns>
+        static string HexConverter(int helTal)
+        {
+            string hexTal = Convert.ToString(helTal, 16);
+            return hexTal;
+        }
+
+        /// <summary>
+        /// Denne metode konvertere et heltal til et binært tal
+        /// </summary>
+        /// <param name="helTal"></param>
+        /// <returns></returns>
+        static string BiConverter(int helTal)
+        { 
+            string biTal = Convert.ToString(helTal, 2);
+            return biTal;
         }
     }
 }
